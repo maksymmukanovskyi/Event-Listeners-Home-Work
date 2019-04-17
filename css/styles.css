@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+
+.image-gallery {
+    width: 1980px;
+    margin: auto;
+    border: #fff solid 3px;
+    background: #fff;
+    padding-top: 45px;
+}
+
+.fullview img,
+.preview li img{
+    display: block;
+    height: 100%;
+    margin: auto;
+
+}
+
+.preview li img{
+    height: 100%;
+    width: 100%;
+
+}
+
+
+.fullview{
+    background-color: rgba(0, 0, 0, 0.3);
+    display: block;
+    height: 950px;
+    margin-bottom:   45px;
+    box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.75);
+
+}
+
+
+
+
+
+.preview{
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 9px;
+    box-shadow: 0px 0px 29px 0px rgba(0,0,0,0.75);
+}
+
+@keyframes fadeIn {
+    to{
+        opacity: 1;
+    }
+}
+
+.fade-in{
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in 1 forwards;
+}
+
+
+

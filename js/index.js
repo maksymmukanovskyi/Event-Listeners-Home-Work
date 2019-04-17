@@ -1,7 +1,7 @@
 'use strict'
-const mainDiv = $qs('#root');
-const newElem = $cel('h1',{class: 'gold'},'Hello myfriend');
-mainDiv.appendChild(newElem);
+
+
+
 
 /*
   Создайте компонент галлереи изображений следующего вида.
@@ -59,34 +59,59 @@ mainDiv.appendChild(newElem);
 */
 
 const galleryItems = [
-    { preview: 'img/preview-1.jpeg', fullview: 'img/fullview-1.jpeg', alt: "alt text 1" },
-    { preview: 'img/preview-2.jpeg', fullview: 'img/fullview-2.jpeg', alt: "alt text 2" },
-    { preview: 'img/preview-3.jpeg', fullview: 'img/fullview-3.jpeg', alt: "alt text 3" },
-    { preview: 'img/preview-4.jpeg', fullview: 'img/fullview-4.jpeg', alt: "alt text 4" },
-    { preview: 'img/preview-5.jpeg', fullview: 'img/fullview-5.jpeg', alt: "alt text 5" },
-    { preview: 'img/preview-6.jpeg', fullview: 'img/fullview-6.jpeg', alt: "alt text 6" },
+    { preview: './img/preview-1.jpg', fullview: './img/fullview-1.jpg', alt: "alt text 1" },
+    { preview: './img/preview-2.jpg', fullview: './img/fullview-2.jpg', alt: "alt text 2" },
+    { preview: './img/preview-3.jpg', fullview: './img/fullview-3.jpg', alt: "alt text 3" },
+    { preview: './img/preview-4.jpg', fullview: './img/fullview-4.jpg', alt: "alt text 4" },
+    { preview: './img/preview-5.jpg', fullview: './img/fullview-5.jpg', alt: "alt text 5" },
+    { preview: './img/preview-6.jpg', fullview: './img/fullview-6.jpg', alt: "alt text 6" },
   ];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = $qs('#root');
+    container.insertAdjacentHTML('afterbegin',mainImg(galleryItems[0], 'default pics'));
+    const preview = $qs('.preview');
+    preview.insertAdjacentHTML('afterbegin', arrayImg(galleryItems));
+
+    const currentImg = $qs('.current-img');
+    const defaultImg = $qsa('li img');
+    const opacity = 0.6;
+    // defaultImg[0].style.opacity = 1;
+    defaultImg.forEach(el => el.style.opacity = opacity);
+    currentImg.src = defaultImg[0].dataset.fullview
+
+
+
+
+    function mainImg({fullview, alt}){
+     return `<div class="image-gallery js-image-gallery">
+            <div class="fullview">
+             <img class='current-img' src=${fullview} alt=${alt}>
+            </div>
+            <ul class="preview"></ul>
+            </div>`;
+    };
+
+    function arrayImg(array){
+        return array.reduce((acc, el) => acc + `<li><img src=${el.preview} data-fullview=${el.fullview} alt=${el.alt}></li>`, '');
+    };
+
+    function imgClick(e){
+        e.preventDefault();
+        const target = e.target;
+
+        defaultImg.forEach(el => {
+            if(el !== target){
+                el.style.opacity = opacity;
+                }else{
+                el.style.opacity = 1}});
+
+        if(!target.dataset.fullview) return;
+        currentImg.src = target.dataset.fullview;
+    };
+
+    preview.addEventListener('click', imgClick);
+
+});
   
   
-  /*
-    ⚠️ ЗАДАНИЕ ПОВЫШЕННОЙ СЛОЖНОСТИ - ВЫПОЛНЯТЬ ПО ЖЕЛАНИЮ
-    
-    Создайте плагин галлереи используя ES6 класс. Добавьте поля и методы класса так, 
-    чтобы можно было создать любое количество галлерей на странице. Функционал плагина 
-    аналогичный заданию выше.
-    
-    При создании экземпляра конструктор получает:
-      - items - список элементов для preview
-      - parentNode - ссылку на DOM-узел в который будут помещены fullview и preview
-      - defaultActiveItem - номер активного элемента preview по умолчанию
-      
-    Тогда создание экземпляра будет выглядеть следующим образом.
-  */
-  
-  new Gallery({
-    items: galleryItems,
-    parentNode: document.querySelector('.image-gallery'),
-    defaultActiveItem: 1
-  });
-  
-  /* Далее плагин работает в автономном режиме */
