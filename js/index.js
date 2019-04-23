@@ -67,51 +67,150 @@ const galleryItems = [
     { preview: './img/preview-6.jpg', fullview: './img/fullview-6.jpg', alt: "alt text 6" },
   ];
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = $qs('#root');
-    container.insertAdjacentHTML('afterbegin',mainImg(galleryItems[0], 'default pics'));
-    const preview = $qs('.preview');
-    preview.insertAdjacentHTML('afterbegin', arrayImg(galleryItems));
+//   document.addEventListener('DOMContentLoaded', () => {
+//     const container = $qs('#root');
+//     container.insertAdjacentHTML('afterbegin', mainImg(galleryItems[0]));
+//     const preview = $qs('.preview');
+//     preview.insertAdjacentHTML('afterbegin', previewImg(galleryItems));
+//     const currentImg = $qs('.current-img');
+//     const img = $qsa('li img');
+//     currentImg.src = img[0].dataset.fullview;
+//     img.forEach(el => el.style.opacity = 0.3);
 
+//     img[0].style.opacity = 1;
+
+//     preview.addEventListener('click', clickHandler);
+    
+//     function clickHandler(e){
+//       e.preventDefault();
+//       const target = e.target;
+//       if(target.nodeName !== 'IMG') return;
+//         img.forEach(el => {
+//           if(el !== target){
+//             el.style.opacity = 0.3;
+//           }else{
+//             el.style.opacity = 1;
+//           }
+//         })
+
+//       if(!target.dataset.fullview) return;
+//       currentImg.src = target.dataset.fullview;
+
+
+//     }
+
+//     function mainImg({fullview, alt}){
+//       return `<div class="image-gallery js-image-gallery">
+//       <div class="fullview">
+//         <img class= 'current-img' src=${fullview} alt=${alt}>
+//       </div>
+//       <ul class="preview"></ul>
+//     </div> `
+//     };
+
+//     function previewImg(arr){
+//       return arr.reduce((acc, el) => acc + `<li><img src=${el.preview} data-fullview=${el.fullview} alt=${el.alt}></li>`, '');
+//     }
+//   })
+
+  // ===============================================================
+
+/*
+  ⚠️ ЗАДАНИЕ ПОВЫШЕННОЙ СЛОЖНОСТИ - ВЫПОЛНЯТЬ ПО ЖЕЛАНИЮ
+  
+  Создайте плагин галлереи используя ES6 класс. Добавьте поля и методы класса так, 
+  чтобы можно было создать любое количество галлерей на странице. Функционал плагина 
+  аналогичный заданию выше.
+  
+  При создании экземпляра конструктор получает:
+    - items - список элементов для preview
+    - parentNode - ссылку на DOM-узел в который будут помещены fullview и preview
+    - defaultActiveItem - номер активного элемента preview по умолчанию
+    
+  Тогда создание экземпляра будет выглядеть следующим образом.
+*/
+
+// new Gallery({
+//   items: galleryItems,
+//   parentNode: document.querySelector('.image-gallery'),
+//   defaultActiveItem: 1
+// });
+
+/* Далее плагин работает в автономном режиме */
+
+
+
+
+
+
+
+class Gallery{
+  constructor({...args}){
+    this.items = args.items;
+    this.parentNode = args.parentNode;
+    this.defaultActiveItem = args.defaultActiveItem;
+  };
+
+  
+  
+
+  mainImg({fullview, alt}){
+    return `<div class="image-gallery js-image-gallery">
+    <div class="fullview">
+      <img class= 'current-img' src=${fullview} alt=${alt}>
+    </div>
+    <ul class="preview"></ul>
+  </div> `
+  };
+
+
+  previewImg(arr){
+      return arr.reduce((acc, el) => acc + `<li><img src=${el.preview} data-fullview=${el.fullview} alt=${el.alt}></li>`, '');
+  };
+
+  generate(){
+    this.parentNode.insertAdjacentHTML('afterbegin', this.mainImg(this.items[this.defaultActiveItem]));
+    const preview = $qs('.preview'); 
+    preview.insertAdjacentHTML('afterbegin', this.previewImg(this.items));
     const currentImg = $qs('.current-img');
-    const defaultImg = $qsa('li img');
-    const opacity = 0.6;
-    // defaultImg[0].style.opacity = 1;
-    defaultImg.forEach(el => el.style.opacity = opacity);
-    currentImg.src = defaultImg[0].dataset.fullview
+    const img = $qsa('li img');
+    currentImg.src = img[this.defaultActiveItem].dataset.fullview;
+    img.forEach(el => el.style.opacity = 0.3);
+    img[this.defaultActiveItem].style.opacity = 1;
 
+    preview.addEventListener('click', clickHandler);
+    
+    function clickHandler(e){
 
-
-
-    function mainImg({fullview, alt}){
-     return `<div class="image-gallery js-image-gallery">
-            <div class="fullview">
-             <img class='current-img' src=${fullview} alt=${alt}>
-            </div>
-            <ul class="preview"></ul>
-            </div>`;
-    };
-
-    function arrayImg(array){
-        return array.reduce((acc, el) => acc + `<li><img src=${el.preview} data-fullview=${el.fullview} alt=${el.alt}></li>`, '');
-    };
-
-    function imgClick(e){
         e.preventDefault();
         const target = e.target;
-
-        defaultImg.forEach(el => {
+        if(target.nodeName !== 'IMG') return;
+          img.forEach(el => {
             if(el !== target){
-                el.style.opacity = opacity;
-                }else{
-                el.style.opacity = 1}});
-
+              el.style.opacity = 0.3;
+            }else{
+              el.style.opacity = 1;
+            }
+          })
+  
         if(!target.dataset.fullview) return;
         currentImg.src = target.dataset.fullview;
+      }
     };
+};
 
-    preview.addEventListener('click', imgClick);
 
-});
+
   
+document.addEventListener('DOMContentLoaded', () => {
+  const firstGallery = new Gallery({
+    items: galleryItems,
+    parentNode: $qs('#root'),
+    defaultActiveItem: 0,
+  });
+  firstGallery.generate();
+});
+
+
+
   
